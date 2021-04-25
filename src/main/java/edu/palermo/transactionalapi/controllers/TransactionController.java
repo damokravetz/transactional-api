@@ -1,7 +1,6 @@
 package edu.palermo.transactionalapi.controllers;
 
 import edu.palermo.transactionalapi.models.Transaction;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
@@ -16,7 +15,7 @@ public class TransactionController {
     public Transaction greeting(@RequestHeader("user-agent") String device) {
         System.out.println(device);
         Transaction transaction=new Transaction();
-        transaction.setTransactionId(counter.incrementAndGet());
+        transaction.setId(counter.incrementAndGet());
         transaction.setTimestamp(Timestamp.from(Instant.now()));
         transaction.setStatus(true);
         transaction.setErrorCode(0);

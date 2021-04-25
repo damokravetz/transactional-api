@@ -1,13 +1,18 @@
 package edu.palermo.transactionalapi.models;
 
 import java.sql.Timestamp;
-import java.util.concurrent.atomic.AtomicLong;
+import javax.persistence.*;
 
+@Entity
+@Table(name = "transacciones")
 public class Transaction {
+    @Id
+    @GeneratedValue(strategy=GenerationType.AUTO)
+    private Long id;
     private Boolean status;
     private Long errorCode;
     private String msg;
-    private Long transactionId;
+
     private Timestamp timestamp;
 
     public Transaction() {
@@ -37,12 +42,12 @@ public class Transaction {
         this.msg = msg;
     }
 
-    public long getTransactionId() {
-        return transactionId;
+    public long getId() {
+        return id;
     }
 
-    public void setTransactionId(long transactionId) {
-        this.transactionId = transactionId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public Timestamp getTimestamp() {
