@@ -1,6 +1,5 @@
 package edu.palermo.transactionalapi.models;
 
-import java.sql.Timestamp;
 import javax.persistence.*;
 
 @Entity
@@ -9,52 +8,75 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private Boolean status;
-    private Long errorCode;
-    private String msg;
-
-    private Timestamp timestamp;
+    private String idTransaction;
+    private String date;
+    private double amount;
+    @ManyToOne
+    @JoinColumn(name = "creditCardId", referencedColumnName = "id")
+    private CreditCard creditCard;
+    @ManyToOne
+    @JoinColumn(name = "userId", referencedColumnName = "id")
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "commerceId", referencedColumnName = "id")
+    private Commerce commerce;
 
     public Transaction() {
     }
 
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-
-    public long getErrorCode() {
-        return errorCode;
-    }
-
-    public void setErrorCode(long errorCode) {
-        this.errorCode = errorCode;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Timestamp getTimestamp() {
-        return timestamp;
+    public String getDate() {
+        return date;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
-        this.timestamp = timestamp;
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+
+    public CreditCard getCreditCard() {
+        return creditCard;
+    }
+
+    public void setCreditCard(CreditCard creditCard) {
+        this.creditCard = creditCard;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Commerce getCommerce() {
+        return commerce;
+    }
+
+    public void setCommerce(Commerce commerce) {
+        this.commerce = commerce;
+    }
+
+    public String getIdTransaction() {
+        return idTransaction;
+    }
+
+    public void setIdTransaction(String idTransaction) {
+        this.idTransaction = idTransaction;
     }
 }

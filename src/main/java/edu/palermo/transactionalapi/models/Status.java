@@ -1,6 +1,6 @@
 package edu.palermo.transactionalapi.models;
 
-public enum UserStatus {
+public enum Status {
     SUCCESS,
     USER_ALREADY_EXISTS,
     FAILURE

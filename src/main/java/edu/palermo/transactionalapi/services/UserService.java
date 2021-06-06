@@ -18,12 +18,15 @@ public class UserService {
 
     public Optional<User> login(String mail, String pass){
         String myHash="";
+        System.out.println(pass);
         try{
             MessageDigest md = MessageDigest.getInstance(md5);
             md.update(pass.getBytes());
             byte[] digest = md.digest();
             myHash = DatatypeConverter
                     .printHexBinary(digest);
+            System.out.println(myHash);
+
         }catch(NoSuchAlgorithmException exception){
             System.out.println(exception.getMessage());
         }
