@@ -28,6 +28,10 @@ public class TransactionService {
         Optional<CreditCard>creditCard= Optional.ofNullable(creditCardRepository.findByNumberAndExpirationDate(transaction.getCreditCard().getNumber(), transaction.getCreditCard().getExpirationDate()));
         if(user.isPresent()&&commerce.isPresent()&&creditCard.isPresent()){
             if(validateCreditCard(creditCard.get())){
+                transaction.setCreditCard(creditCard.get());
+                transaction.setUser(user.get());
+                transaction.setCommerce(commerce.get());
+                transactionRepository.save(transaction);
                 status=Status.SUCCESS;
             }
         }
