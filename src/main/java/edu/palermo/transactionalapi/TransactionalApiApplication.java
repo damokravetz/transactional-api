@@ -51,7 +51,7 @@ public class TransactionalApiApplication {
 			http.csrf().disable()
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/login").permitAll()
+					.antMatchers(HttpMethod.POST, "/login","/user/create", "/creditcard/create", "/commerce/create").permitAll()
 					.anyRequest().authenticated();
 		}
 	}

@@ -9,5 +9,5 @@ import java.util.List;
 public interface CreditCardRepository extends CrudRepository<CreditCard, Long> {
 
     List<CreditCard> findAll();
-    CreditCard findByNumberAndExpirationDate(String number, String expirationDate);
+    CreditCard findByNumberAndExpirationDateAndVerificationCode(String number, String expirationDate, String verificationCode);
 }
