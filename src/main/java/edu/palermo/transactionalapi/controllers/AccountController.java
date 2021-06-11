@@ -1,7 +1,8 @@
 package edu.palermo.transactionalapi.controllers;
 
+import edu.palermo.transactionalapi.models.Account;
 import edu.palermo.transactionalapi.models.User;
-import edu.palermo.transactionalapi.services.UserService;
+import edu.palermo.transactionalapi.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,17 +16,17 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
-public class UserController {
+public class AccountController {
     @Autowired
-    private UserService userService;
+    private AccountService accountService;
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody User user) {
-        Optional<User> user1=userService.login(user.getMail(), user.getPassword());
-        if(user1.isPresent()){
-            User myUser=user1.get();
+    @PostMapping("/auth")
+    public ResponseEntity login(@RequestBody Account account) {
+        Optional<Account> account1= accountService.login(account.getUsername(), account.getPassword());
+        if(account1.isPresent()){
+            Account myAccount=account1.get();
             HttpHeaders headers = new HttpHeaders();
-            headers.add("Authorization", myUser.getToken());
+            headers.add("Authorization", myAccount.getToken());
             return new ResponseEntity(headers, HttpStatus.OK);
         }else{
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);

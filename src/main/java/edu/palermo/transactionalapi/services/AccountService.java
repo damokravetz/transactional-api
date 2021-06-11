@@ -1,6 +1,8 @@
 package edu.palermo.transactionalapi.services;
 
+import edu.palermo.transactionalapi.models.Account;
 import edu.palermo.transactionalapi.models.User;
+import edu.palermo.transactionalapi.repositories.AccountRepository;
 import edu.palermo.transactionalapi.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -16,15 +18,16 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
-public class UserService {
+public class AccountService {
     @Autowired
-    private UserRepository userRepository;
+    private AccountRepository accountRepository;
     private static final String md5="MD5";
 
-    public Optional<User> login(String mail, String pass){
+    public Optional<Account> login(String username, String pass){
         String myHash="";
         System.out.println(pass);
         try{
@@ -38,11 +41,11 @@ public class UserService {
         }catch(NoSuchAlgorithmException exception){
             System.out.println(exception.getMessage());
         }
-        Optional<User>user=Optional.ofNullable(userRepository.findByMailAndPassword(mail, myHash));
-        if(user.isPresent()){
-            user.get().setToken(getJWTToken(mail));
+        Optional<Account>account=Optional.ofNullable(accountRepository.findByUsernameAndPassword(username, myHash));
+        if(account.isPresent()){
+            account.get().setToken(getJWTToken(username));
         }
-        return user;
+        return account;
     }
 
     public String getJWTToken(String username) {
@@ -52,7 +55,7 @@ public class UserService {
 
         String token = Jwts
                 .builder()
-                .setId("fuelPayJWT")
+                .setId(UUID.randomUUID().toString())
                 .setSubject(username)
                 .claim("authorities",
                         grantedAuthorities.stream()
