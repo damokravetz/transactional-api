@@ -1,9 +1,12 @@
 package edu.palermo.transactionalapi.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "transacciones")
+@JsonIgnoreProperties(value = { "id" })
 public class Transaction {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

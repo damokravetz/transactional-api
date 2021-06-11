@@ -25,29 +25,25 @@ public class TransactionService {
     @Autowired
     private UserRepository userRepository;
 
-    public Status makeTransaction(Transaction transaction){
+    public Transaction makeTransaction(Transaction transaction) {
 
-        Status status=Status.FAILURE;
-        CreditCard myCreditCard=transaction.getCreditCard();
-        Optional<User>user= Optional.ofNullable(userRepository.findByDni(transaction.getUser().getDni()));
-        Optional<Commerce>commerce= Optional.ofNullable(commerceRepository.findByCuit(transaction.getCommerce().getCuit()));
-        Optional<CreditCard>creditCard= Optional.ofNullable(creditCardRepository.findByNumberAndExpirationDateAndVerificationCode
+        Transaction transaction1;
+
+        CreditCard myCreditCard = transaction.getCreditCard();
+        Optional<User> user = Optional.ofNullable(userRepository.findByDni(transaction.getUser().getDni()));
+        Optional<Commerce> commerce = Optional.ofNullable(commerceRepository.findByCuit(transaction.getCommerce().getCuit()));
+        Optional<CreditCard> creditCard = Optional.ofNullable(creditCardRepository.findByNumberAndExpirationDateAndVerificationCode
                 (myCreditCard.getNumber(), myCreditCard.getExpirationDate(), myCreditCard.getVerificationCode()));
 
-        if(user.isPresent()&&commerce.isPresent()&&creditCard.isPresent()){
-
-            if(validateCreditCard(creditCard.get())){
-
-                transaction.setCreditCard(creditCard.get());
-                transaction.setUser(user.get());
-                transaction.setCommerce(commerce.get());
-                transactionRepository.save(transaction);
-                status=Status.SUCCESS;
-
-            }
-
+        if (user.isPresent() && commerce.isPresent() && creditCard.isPresent() && validateCreditCard(creditCard.get())) {
+            transaction.setCreditCard(creditCard.get());
+            transaction.setUser(user.get());
+            transaction.setCommerce(commerce.get());
+            transaction1 = transactionRepository.save(transaction);
+        } else {
+            throw new IllegalArgumentException("Error al validar la tarjeta");
         }
-        return status;
+        return transaction1;
     }
 
     private Boolean validateCreditCard(CreditCard creditCard){
