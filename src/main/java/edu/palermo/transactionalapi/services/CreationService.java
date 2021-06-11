@@ -20,6 +20,8 @@ public class CreationService {
     private UserRepository userRepository;
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private AccountService accountService;
 
     public User createUser(User user) throws IllegalArgumentException{
         return userRepository.save(user);
@@ -34,6 +36,8 @@ public class CreationService {
     }
 
     public Account createAccount(Account account)throws IllegalArgumentException{
+        String myHash=accountService.getHash(account.getPassword());
+        account.setPassword(myHash);
         return accountRepository.save(account);
     }
 }

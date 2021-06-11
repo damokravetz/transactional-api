@@ -1,7 +1,6 @@
 package edu.palermo.transactionalapi.controllers;
 
 import edu.palermo.transactionalapi.models.Account;
-import edu.palermo.transactionalapi.models.User;
 import edu.palermo.transactionalapi.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -22,7 +21,7 @@ public class AccountController {
 
     @PostMapping("/auth")
     public ResponseEntity login(@RequestBody Account account) {
-        Optional<Account> account1= accountService.login(account.getUsername(), account.getPassword());
+        Optional<Account> account1= accountService.authorize(account.getUsername(), account.getPassword());
         if(account1.isPresent()){
             Account myAccount=account1.get();
             HttpHeaders headers = new HttpHeaders();

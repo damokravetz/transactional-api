@@ -1,9 +1,7 @@
 package edu.palermo.transactionalapi.services;
 
 import edu.palermo.transactionalapi.models.Account;
-import edu.palermo.transactionalapi.models.User;
 import edu.palermo.transactionalapi.repositories.AccountRepository;
-import edu.palermo.transactionalapi.repositories.UserRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -27,7 +25,16 @@ public class AccountService {
     private AccountRepository accountRepository;
     private static final String md5="MD5";
 
-    public Optional<Account> login(String username, String pass){
+    public Optional<Account> authorize(String username, String pass){
+        String myHash = getHash(pass);
+        Optional<Account>account=Optional.ofNullable(accountRepository.findByUsernameAndPassword(username, myHash));
+        if(account.isPresent()){
+            account.get().setToken(getJWTToken(username));
+        }
+        return account;
+    }
+
+    public String getHash(String pass) {
         String myHash="";
         System.out.println(pass);
         try{
@@ -41,11 +48,7 @@ public class AccountService {
         }catch(NoSuchAlgorithmException exception){
             System.out.println(exception.getMessage());
         }
-        Optional<Account>account=Optional.ofNullable(accountRepository.findByUsernameAndPassword(username, myHash));
-        if(account.isPresent()){
-            account.get().setToken(getJWTToken(username));
-        }
-        return account;
+        return myHash;
     }
 
     public String getJWTToken(String username) {

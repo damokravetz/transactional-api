@@ -9,6 +9,4 @@ import java.util.List;
 public interface AccountRepository extends CrudRepository<Account, Long> {
     List<Account> findAll();
     Account findByUsernameAndPassword(String username, String pass);
-    Account findByDni(String dni);
-
 }
