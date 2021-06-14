@@ -22,7 +22,7 @@ La API esta desarrollada en Java, usando Spring Boot framework.
 
 ## /transfer
 
-###Parámetros
+### Parámetros
 
 
     "idTransaction" : "12546563",
@@ -44,7 +44,7 @@ La API esta desarrollada en Java, usando Spring Boot framework.
         "name": "Almacen don Tito"
         }
 
-###Requerimiento
+### Requerimiento
 Requiere el header “Autorization” cuyo valor debe ser un token, ej “Bearer nd8293rh9whn230dj2d3j”
 
 ### Funcionamiento
