@@ -6,11 +6,11 @@ La API esta desarrollada en Java, usando Spring Boot framework.
     
 ## /auth
 
-###Parámetros
+### Parámetros
     "username":"fuelpay",
     "password":"123qweasdzxc"
 
-###Funcionamiento
+### Funcionamiento
 1.	El Controlador recibe estos dos parámetros a través del enpoint “/auth”.
 2.	Llama al servicio “AccountService” pasando los dos parámetros. 
 3.	El servicio hashea la contraseña con md5.
