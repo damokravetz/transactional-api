@@ -6,7 +6,9 @@ import edu.palermo.transactionalapi.repositories.CreditCardRepository;
 import edu.palermo.transactionalapi.repositories.TransactionRepository;
 import edu.palermo.transactionalapi.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -41,7 +43,11 @@ public class TransactionService {
             transaction.setCommerce(commerce.get());
             transaction1 = transactionRepository.save(transaction);
         } else {
-            throw new IllegalArgumentException("Error al validar la tarjeta");
+            if(!validateCreditCard(creditCard.get())){
+                throw new BusinessException("Credit expired");
+            }else{
+                throw new BusinessException("Invalid transaction");
+            }
         }
         return transaction1;
     }

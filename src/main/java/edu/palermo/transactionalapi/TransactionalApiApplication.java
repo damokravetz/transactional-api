@@ -36,7 +36,7 @@ public class TransactionalApiApplication {
 	public CommandLineRunner demo() {
 		return (args) -> {
 			// save a few users
-			//userRepository.save(new User("Lucas", "Gomez", "20316161", "lucasgomez@gmail.com", "e10adc3949ba59abbe56e057f20f883e"));
+			//userRepository.delete(new User("Lucas", "Gomez", "20316161", "lucasgomez@gmail.com", "e10adc3949ba59abbe56e057f20f883e"));
 			//creditCardRepository.save(new CreditCard("312","11/25","Lucas Gomez", "4200145601473690", "visa"));
 			//commerceRepository.save(new Commerce("20335554441", "Almacen don Tito"));
 		};

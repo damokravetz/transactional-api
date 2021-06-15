@@ -10,4 +10,5 @@ public interface CreditCardRepository extends CrudRepository<CreditCard, Long> {
 
     List<CreditCard> findAll();
     CreditCard findByNumberAndExpirationDateAndVerificationCode(String number, String expirationDate, String verificationCode);
+    CreditCard findByNumber(String number);
 }

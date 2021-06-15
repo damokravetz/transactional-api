@@ -1,9 +1,6 @@
 package edu.palermo.transactionalapi.controllers;
 
-import edu.palermo.transactionalapi.models.Account;
-import edu.palermo.transactionalapi.models.Commerce;
-import edu.palermo.transactionalapi.models.CreditCard;
-import edu.palermo.transactionalapi.models.User;
+import edu.palermo.transactionalapi.models.*;
 import edu.palermo.transactionalapi.services.AccountService;
 import edu.palermo.transactionalapi.services.CreationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,46 +16,94 @@ public class CreationController {
     private CreationService creationService;
 
     @PostMapping("/user/create")
-    public ResponseEntity createUser(@RequestBody User user) {
+    public ResponseEntity<Response> createUser(@RequestBody User user) {
         try{
-            User myUser=creationService.createUser(user);
-            return new ResponseEntity(myUser, HttpStatus.OK);
-
+            if(!creationService.userAlreadyExists(user)){
+                User myUser=creationService.createUser(user);
+                Response response=new Response();
+                response.putItem("statusCode", 201);
+                response.putItem("message", "User created succesfully");
+                return new ResponseEntity(response, HttpStatus.OK);
+            }else{
+                Response response=new Response();
+                response.putItem("statusCode", 409);
+                response.putItem("message", "User already exists");
+                return new ResponseEntity(response, HttpStatus.CONFLICT);
+            }
         }catch(IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/creditcard/create")
     public ResponseEntity createCreditCard(@RequestBody CreditCard creditCard) {
         try{
-            CreditCard myCreditCard=creationService.createCreditCard(creditCard);
-            return new ResponseEntity(myCreditCard, HttpStatus.OK);
-
+            if(!creationService.creditCardAlreadyExists(creditCard)){
+                CreditCard myCreditCard=creationService.createCreditCard(creditCard);
+                Response response=new Response();
+                response.putItem("statusCode", 201);
+                response.putItem("message", "CreditCard created succesfully");
+                return new ResponseEntity(response, HttpStatus.OK);
+            }else{
+                Response response=new Response();
+                response.putItem("statusCode", 409);
+                response.putItem("message", "CreditCard already exists");
+                return new ResponseEntity(response, HttpStatus.CONFLICT);
+            }
         }catch(IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/commerce/create")
     public ResponseEntity createCommerce(@RequestBody Commerce commerce) {
         try{
-            Commerce myCommerce=creationService.createCommerce(commerce);
-            return new ResponseEntity(myCommerce, HttpStatus.OK);
-
+            if(!creationService.commerceAlreadyExists(commerce)){
+                Commerce myCommerce=creationService.createCommerce(commerce);
+                Response response=new Response();
+                response.putItem("statusCode", 201);
+                response.putItem("message", "Commerce created succesfully");
+                return new ResponseEntity(response, HttpStatus.OK);
+            }else{
+                Response response=new Response();
+                response.putItem("statusCode", 409);
+                response.putItem("message", "Commerce already exists");
+                return new ResponseEntity(response, HttpStatus.CONFLICT);
+            }
         }catch(IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @PostMapping("/account/create")
     public ResponseEntity createAccount(@RequestBody Account account) {
         try{
-            Account myAccount=creationService.createAccount(account);
-            return new ResponseEntity(myAccount, HttpStatus.OK);
-
+            if(!creationService.accountAlreadyExists(account)){
+                Account myAccount=creationService.createAccount(account);
+                Response response=new Response();
+                response.putItem("statusCode", 201);
+                response.putItem("message", "Account created succesfully");
+                return new ResponseEntity(response, HttpStatus.OK);
+            }else{
+                Response response=new Response();
+                response.putItem("statusCode", 409);
+                response.putItem("message", "Account already exists");
+                return new ResponseEntity(response, HttpStatus.CONFLICT);
+            }
         }catch(IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

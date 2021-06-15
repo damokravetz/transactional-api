@@ -82,4 +82,6 @@ public class Transaction {
     public void setIdTransaction(String idTransaction) {
         this.idTransaction = idTransaction;
     }
+
+
 }

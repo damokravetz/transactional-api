@@ -1,6 +1,8 @@
 package edu.palermo.transactionalapi.controllers;
 
+import edu.palermo.transactionalapi.models.Response;
 import edu.palermo.transactionalapi.models.Transaction;
+import edu.palermo.transactionalapi.services.BusinessException;
 import edu.palermo.transactionalapi.services.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +21,20 @@ public class TransactionController {
     public ResponseEntity excecuteTransaction(@RequestBody Transaction transaction) {
         try{
             Transaction transaction1=transactionService.makeTransaction(transaction);
-            return new ResponseEntity(transaction1, HttpStatus.OK);
-
+            Response response=new Response();
+            response.putItem("statusCode", 200);
+            response.putItem("message", "Succesful transcation");
+            return new ResponseEntity(response, HttpStatus.OK);
+        }catch (BusinessException e){
+            Response response=new Response();
+            response.putItem("statusCode", 409);
+            response.putItem("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.CONFLICT);
         }catch(IllegalArgumentException e){
-            return new ResponseEntity(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
