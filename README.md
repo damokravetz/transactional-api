@@ -42,7 +42,7 @@ La API esta desarrollada en Java, usando Spring Boot framework.
 
 `POST /transaccion`
 
- Authorization: Bearer token
+     Authorization: Bearer token
 
      {
          "idTransaction" : "12546563",
