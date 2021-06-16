@@ -10,31 +10,31 @@ La API esta desarrollada en Java, usando Spring Boot framework.
 
 `POST /auth`
  
- {
-    "username":"test",
-    "password":"pass"
- }
+     {
+        "username":"test",
+        "password":"pass"
+     }
  
 ### Response
 
 `OK`
 
- {
-     "data": {
-         "message": "Authorized",
-         "statusCode": 200,
-         "token": "Bearer token"
+     {
+         "data": {
+             "message": "Authorized",
+             "statusCode": 200,
+             "token": "Bearer token"
+         }
      }
- }
  
 `Unauthorized`
 
- {
-     "data": {
-         "message": "Unauthorized",
-            "statusCode": 401
+     {
+         "data": {
+             "message": "Unauthorized",
+                "statusCode": 401
+         }
      }
- }
 
 ## Hacer una transacción
 
@@ -42,28 +42,28 @@ La API esta desarrollada en Java, usando Spring Boot framework.
 
 `POST /transaccion`
 
-Authorization: Bearer token
+ Authorization: Bearer token
 
- {
-     "idTransaction" : "12546563",
-     "date": "01/06/2021",
-     "amount": 1500.0,
-     "creditCard": {
-         "verificationCode": "312",
-         "expirationDate": "11/25",
-         "name": "test",
-         "number": "4200145601473690",
-         "type": "visa"
-         },
-     "user": {
-         "dni": "20316161",
-         "name": "test"
-         },
-     "commerce": {
-         "cuit": "20335554441",
-         "name": "test"
-         }
- }
+     {
+         "idTransaction" : "12546563",
+         "date": "01/06/2021",
+         "amount": 1500.0,
+         "creditCard": {
+             "verificationCode": "312",
+             "expirationDate": "11/25",
+             "name": "test",
+             "number": "4200145601473690",
+             "type": "visa"
+             },
+         "user": {
+             "dni": "20316161",
+             "name": "test"
+             },
+         "commerce": {
+             "cuit": "20335554441",
+             "name": "test"
+             }
+     }
   
 ### Response
 
@@ -100,30 +100,30 @@ Authorization: Bearer token
 
 `POST /user/create`
  
- {
-     "name": "test",
-     "dni": "20316161"
- }
+     {
+         "name": "test",
+         "dni": "20316161"
+     }
  
 ### Response
 
 `OK`
 
- {
-     "data": {
-         "message": "User created succesfully",
-         "statusCode": 201
+     {
+         "data": {
+             "message": "User created succesfully",
+             "statusCode": 201
+         }
      }
- }
  
 `Already exists`
 
- {
-     "data": {
-         "message": "User already exists",
-         "statusCode": 409
+     {
+         "data": {
+             "message": "User already exists",
+             "statusCode": 409
+         }
      }
- }
  
 ## Crear comercio
 
@@ -131,30 +131,30 @@ Authorization: Bearer token
 
 `POST /commerce/create`
  
- {
-    "cuit": "20335554441",
-    "name": "test"
- }
+     {
+        "cuit": "20335554441",
+        "name": "test"
+     }
  
 ### Response
 
 `OK`
 
- {
-     "data": {
-         "message": "Commerce created succesfully",
-         "statusCode": 201
+     {
+         "data": {
+             "message": "Commerce created succesfully",
+             "statusCode": 201
+         }
      }
- }
  
 `Already exists`
 
- {
-     "data": {
-         "message": "Commerce already exists",
-         "statusCode": 409
+     {
+         "data": {
+             "message": "Commerce already exists",
+             "statusCode": 409
+         }
      }
- }
  
 ## Crear tarjeta
 
@@ -162,33 +162,33 @@ Authorization: Bearer token
 
 `POST /creditcard/create`
  
- {
-    "verificationCode": "312",
-    "expirationDate": "11/25",
-    "name": "test",
-    "number": "4200145601473690",
-    "type": "visa"
- }
+     {
+        "verificationCode": "312",
+        "expirationDate": "11/25",
+        "name": "test",
+        "number": "4200145601473690",
+        "type": "visa"
+     }
  
 ### Response
 
 `OK`
 
- {
-     "data": {
-         "message": "CreditCard created succesfully",
-         "statusCode": 201
+     {
+         "data": {
+             "message": "CreditCard created succesfully",
+             "statusCode": 201
+         }
      }
- }
  
 `Already exists`
 
- {
-     "data": {
-         "message": "CreditCard already exists",
-         "statusCode": 409
+     {
+         "data": {
+             "message": "CreditCard already exists",
+             "statusCode": 409
+         }
      }
- }
  
 ## Crear cuenta
 
@@ -196,29 +196,29 @@ Authorization: Bearer token
 
 `POST /account/create`
  
- {
-    "cuit": "20284627461",
-    "razonSocial": "test",
-    "username": "test",
-    "password": "pass"
- }
+     {
+        "cuit": "20284627461",
+        "razonSocial": "test",
+        "username": "test",
+        "password": "pass"
+     }
  
 ### Response
 
 `OK`
 
- {
-     "data": {
-         "message": "Account created succesfully",
-         "statusCode": 201
+     {
+         "data": {
+             "message": "Account created succesfully",
+             "statusCode": 201
+         }
      }
- }
  
 `Already exists`
 
- {
-     "data": {
-         "message": "Account already exists",
-         "statusCode": 409
+     {
+         "data": {
+             "message": "Account already exists",
+             "statusCode": 409
+         }
      }
- }
