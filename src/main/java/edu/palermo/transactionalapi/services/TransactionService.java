@@ -37,17 +37,17 @@ public class TransactionService {
         Optional<CreditCard> creditCard = Optional.ofNullable(creditCardRepository.findByNumberAndExpirationDateAndVerificationCode
                 (myCreditCard.getNumber(), myCreditCard.getExpirationDate(), myCreditCard.getVerificationCode()));
 
-        if (user.isPresent() && commerce.isPresent() && creditCard.isPresent() && validateCreditCard(creditCard.get())) {
-            transaction.setCreditCard(creditCard.get());
-            transaction.setUser(user.get());
-            transaction.setCommerce(commerce.get());
-            transaction1 = transactionRepository.save(transaction);
-        } else {
-            if(!validateCreditCard(creditCard.get())){
-                throw new BusinessException("Credit expired");
-            }else{
-                throw new BusinessException("Invalid transaction");
+        if (user.isPresent() && commerce.isPresent() && creditCard.isPresent()) {
+            if (validateCreditCard(creditCard.get())) {
+                transaction.setCreditCard(creditCard.get());
+                transaction.setUser(user.get());
+                transaction.setCommerce(commerce.get());
+                transaction1 = transactionRepository.save(transaction);
+            } else {
+                throw new BusinessException("Credit card expired");
             }
+        } else {
+            throw new BusinessException("Invalid transaction");
         }
         return transaction1;
     }
