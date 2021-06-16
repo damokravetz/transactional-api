@@ -61,7 +61,7 @@ La API esta desarrollada en Java, usando Spring Boot framework.
         
 ### Response
 
-    `OK`
+ `OK`
 
     {
         "data": {
