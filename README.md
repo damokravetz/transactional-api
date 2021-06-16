@@ -35,6 +35,17 @@ La API esta desarrollada en Java, usando Spring Boot framework.
                 "statusCode": 401
          }
      }
+     
+### Funcionamiento
+     
+1.	Controlador recibe estos dos parámetros a través del enpoint “/auth”.
+2.	Llama al servicio “AccountService” pasando los dos parámetros 
+3.	El servicio hashea la contraseña con md5.
+4.	Compara el usuario y su contraseña hasheada contra la capa de repositorio/ la base de datos.
+5.	Si el usuario y la contraseña son correctos, el “AccountService” llama al servicio de autorización y le pasa el nombre de usuario.
+6.	El servicio de autorización crea un token para el usuario y lo devuelve.
+7.	El “AccountService” devuelve el usuario con el token al controlador.
+8.	El controlador devuelve el token en la respuesta.
 
 ## Hacer una transacción
 
@@ -93,6 +104,20 @@ La API esta desarrollada en Java, usando Spring Boot framework.
             "statusCode": 409
         }
     }
+    
+### Funcionamiento    
+    
+1.	El filtro de autorización JWT chequea la existencia de un token en el request y lo valida.
+2.	Si no detecta ningún token o detecta un token invalido devuelve una respuesta http 403 forbbiden.
+3.	Si el token es valido permite el request.
+4.	El controlador recibe la información a través del endpoint /transaction.
+5.	Llama al servicio de transacciones que se encarga de validar la transacción.
+6.	El servicio se fija:
+a.	Que exista el usuario.
+b.	Que exista el comercio.
+c.	Que exista la tarjeta.
+d.	Que coincidan los datos de la tarjeta y la fecha de expiración sea válida.
+7.	Una vez que chequea estos datos impacta la transacción en base de datos y devuelve una respuesta con código 200.
 
 ## Crear usuario
 
