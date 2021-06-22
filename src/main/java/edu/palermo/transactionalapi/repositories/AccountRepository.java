@@ -10,4 +10,6 @@ public interface AccountRepository extends CrudRepository<Account, Long> {
     List<Account> findAll();
     Account findByUsernameAndPassword(String username, String pass);
     Account findByUsername(String username);
+    Account findTopByOrderByIdDesc();
+    Account findByPspCode(String pspCode);
 }

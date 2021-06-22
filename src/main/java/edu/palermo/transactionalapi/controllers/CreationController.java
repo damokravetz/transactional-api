@@ -2,7 +2,9 @@ package edu.palermo.transactionalapi.controllers;
 
 import edu.palermo.transactionalapi.models.*;
 import edu.palermo.transactionalapi.services.AccountService;
+import edu.palermo.transactionalapi.services.BusinessException;
 import edu.palermo.transactionalapi.services.CreationService;
+import edu.palermo.transactionalapi.services.JWTAuthorizationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,19 +12,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 public class CreationController {
     @Autowired
     private CreationService creationService;
 
     @PostMapping("/user/create")
-    public ResponseEntity<Response> createUser(@RequestBody User user) {
+    public ResponseEntity<Response> createUser(HttpServletRequest request, @RequestBody User user) {
         try{
             if(!creationService.userAlreadyExists(user)){
-                User myUser=creationService.createUser(user);
+                User myUser=creationService.createUser(request, user);
                 Response response=new Response();
                 response.putItem("statusCode", 201);
                 response.putItem("message", "User created succesfully");
+                response.putItem("cvu", myUser.getCvu());
                 return new ResponseEntity(response, HttpStatus.OK);
             }else{
                 Response response=new Response();
@@ -92,6 +97,7 @@ public class CreationController {
                 Response response=new Response();
                 response.putItem("statusCode", 201);
                 response.putItem("message", "Account created succesfully");
+                response.putItem("pspCode", myAccount.getPspCode());
                 return new ResponseEntity(response, HttpStatus.OK);
             }else{
                 Response response=new Response();
@@ -104,6 +110,11 @@ public class CreationController {
             response.putItem("statusCode", 500);
             response.putItem("message", "Something went wrong");
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (BusinessException e){
+            Response response=new Response();
+            response.putItem("statusCode", 406);
+            response.putItem("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.NOT_ACCEPTABLE);
         }
     }
 

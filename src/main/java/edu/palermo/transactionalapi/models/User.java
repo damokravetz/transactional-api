@@ -13,6 +13,7 @@ public class User {
     private Long id;
     private String name;
     private String dni;
+    private String cvu;
 
     public User() {
     }
@@ -44,5 +45,13 @@ public class User {
 
     public void setDni(String dni) {
         this.dni = dni;
+    }
+
+    public String getCvu() {
+        return cvu;
+    }
+
+    public void setCvu(String cvu) {
+        this.cvu = cvu;
     }
 }

@@ -15,14 +15,18 @@ public class Account {
     private String cuit;
     private String username;
     private String password;
+    @Column(length = 4)
+    private String pspCode;
+    private Double amount;
     @Transient
     private String token;
 
-    public Account(String razonSocial, String cuit, String username, String password) {
+    public Account(String razonSocial, String cuit, String username, String password, Double amount) {
         this.razonSocial = razonSocial;
         this.cuit = cuit;
         this.username = username;
         this.password = password;
+        this.amount= amount;
     }
 
     public Account() {
@@ -74,5 +78,21 @@ public class Account {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPspCode() {
+        return pspCode;
+    }
+
+    public void setPspCode(String pspCode) {
+        this.pspCode = pspCode;
+    }
+
+    public Double getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Double amount) {
+        this.amount = amount;
     }
 }

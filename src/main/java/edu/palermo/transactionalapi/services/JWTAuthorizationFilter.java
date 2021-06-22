@@ -5,6 +5,7 @@ import io.jsonwebtoken.security.SignatureException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private final String HEADER = "Authorization";
@@ -60,6 +62,11 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
                 authorities.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
         SecurityContextHolder.getContext().setAuthentication(auth);
 
+    }
+
+    public String getUser(HttpServletRequest request){
+        String jwtToken = request.getHeader(HEADER).replace(PREFIX, "");
+        return Jwts.parserBuilder().setSigningKey(SECRET.getBytes()).build().parseClaimsJws(jwtToken).getBody().getSubject();
     }
 
     private boolean checkJWTToken(HttpServletRequest request, HttpServletResponse res) {
