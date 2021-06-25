@@ -1,7 +1,7 @@
 package edu.palermo.transactionalapi.services;
 
-import edu.palermo.transactionalapi.models.Account;
-import edu.palermo.transactionalapi.repositories.AccountRepository;
+import edu.palermo.transactionalapi.models.Psp;
+import edu.palermo.transactionalapi.repositories.PspRepository;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -22,12 +22,12 @@ import java.util.stream.Collectors;
 @Service
 public class AccountService {
     @Autowired
-    private AccountRepository accountRepository;
+    private PspRepository pspRepository;
     private static final String md5="MD5";
 
-    public Optional<Account> authorize(String username, String pass){
+    public Optional<Psp> authorize(String username, String pass){
         String myHash = getHash(pass);
-        Optional<Account>account=Optional.ofNullable(accountRepository.findByUsernameAndPassword(username, myHash));
+        Optional<Psp>account=Optional.ofNullable(pspRepository.findByUsernameAndPassword(username, myHash));
         if(account.isPresent()){
             account.get().setToken(getJWTToken(username));
         }

@@ -3,6 +3,8 @@ package edu.palermo.transactionalapi.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Entity
 @Table(name = "users")
@@ -13,14 +15,18 @@ public class User {
     private Long id;
     private String name;
     private String dni;
-    private String cvu;
+    private String userPspId;
+    @OneToOne
+    @JoinColumn(name = "cvuId", referencedColumnName = "id")
+    private Cvu cvu;
 
     public User() {
     }
 
-    public User(String name, String dni) {
+    public User(String name, String dni, String userPspId) {
         this.name = name;
         this.dni = dni;
+        this.userPspId= userPspId;
     }
 
     public Long getId() {
@@ -47,11 +53,46 @@ public class User {
         this.dni = dni;
     }
 
-    public String getCvu() {
+    public Cvu getCvu() {
         return cvu;
     }
 
-    public void setCvu(String cvu) {
+    public void setCvu(Cvu cvu) {
         this.cvu = cvu;
     }
+
+    public String getUserPspId() {
+        return userPspId;
+    }
+
+    public void setUserPspId(String userPspId) {
+        this.userPspId = userPspId;
+    }
+
+    public Boolean isUserPspIdValid(){
+        Boolean res=false;
+        try{
+            Long value= Long.valueOf(this.userPspId);
+            if(this.userPspId.length()==12){
+                res=true;
+            }
+        }catch (NumberFormatException ex){
+            res=false;
+        }
+        return res;
+    }
+
+    public Boolean isUserDniValid(){
+        Boolean res=false;
+        try{
+            Integer value= Integer.valueOf(this.dni);
+            if(this.dni.length()==8){
+                res=true;
+            }
+        }catch (NumberFormatException ex){
+            res=false;
+        }
+        return res;
+    }
+
 }

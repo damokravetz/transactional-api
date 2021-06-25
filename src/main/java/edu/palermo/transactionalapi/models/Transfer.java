@@ -13,10 +13,10 @@ public class Transfer {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "accountOriginId", referencedColumnName = "id")
-    private Account accountOrigin;
+    private Psp pspOrigin;
     @ManyToOne
     @JoinColumn(name = "accountDestinationId", referencedColumnName = "id")
-    private Account accountDestination;
+    private Psp pspDestination;
     @ManyToOne
     @JoinColumn(name = "userOriginId", referencedColumnName = "id")
     private User userOrigin;
@@ -25,9 +25,9 @@ public class Transfer {
     private User userDestination;
     private double amount;
 
-    public Transfer(Account accountOrigin, Account accountDestination, User userOrigin, User userDestination, double amount) {
-        this.accountOrigin = accountOrigin;
-        this.accountDestination = accountDestination;
+    public Transfer(Psp pspOrigin, Psp pspDestination, User userOrigin, User userDestination, double amount) {
+        this.pspOrigin = pspOrigin;
+        this.pspDestination = pspDestination;
         this.userOrigin = userOrigin;
         this.userDestination = userDestination;
         this.amount = amount;
@@ -49,20 +49,20 @@ public class Transfer {
         this.userDestination = userDestination;
     }
 
-    public Account getAccountOrigin() {
-        return accountOrigin;
+    public Psp getAccountOrigin() {
+        return pspOrigin;
     }
 
-    public void setAccountOrigin(Account accountOrigin) {
-        this.accountOrigin = accountOrigin;
+    public void setAccountOrigin(Psp pspOrigin) {
+        this.pspOrigin = pspOrigin;
     }
 
-    public Account getAccountDestination() {
-        return accountDestination;
+    public Psp getAccountDestination() {
+        return pspDestination;
     }
 
-    public void setAccountDestination(Account accountDestination) {
-        this.accountDestination = accountDestination;
+    public void setAccountDestination(Psp pspDestination) {
+        this.pspDestination = pspDestination;
     }
 
     public double getAmount() {

@@ -219,7 +219,7 @@ d.	Que coincidan los datos de la tarjeta y la fecha de expiración sea válida.
 
 ### Request
 
-`POST /account/create`
+`POST /psp/create`
  
      {
         "cuit": "20284627461",

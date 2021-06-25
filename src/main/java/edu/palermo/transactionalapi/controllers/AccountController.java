@@ -1,6 +1,6 @@
 package edu.palermo.transactionalapi.controllers;
 
-import edu.palermo.transactionalapi.models.Account;
+import edu.palermo.transactionalapi.models.Psp;
 import edu.palermo.transactionalapi.models.Response;
 import edu.palermo.transactionalapi.services.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,9 +21,9 @@ public class AccountController {
     private AccountService accountService;
 
     @PostMapping("/auth")
-    public ResponseEntity<Response> authorize(@RequestBody Account account) {
+    public ResponseEntity<Response> authorize(@RequestBody Psp psp) {
         try{
-            Optional<Account> account1= accountService.authorize(account.getUsername(), account.getPassword());
+            Optional<Psp> account1= accountService.authorize(psp.getUsername(), psp.getPassword());
             if(account1.isPresent()){
                 HttpHeaders headers = new HttpHeaders();
                 headers.add("Authorization", account1.get().getToken());

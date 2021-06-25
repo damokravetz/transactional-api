@@ -14,7 +14,7 @@ public class CashIn {
     private Long id;
     @ManyToOne
     @JoinColumn(name = "accountId", referencedColumnName = "id")
-    private Account account;
+    private Psp psp;
     @ManyToOne
     @JoinColumn(name = "creditCardId", referencedColumnName = "id")
     private CreditCard creditCard;
@@ -23,8 +23,8 @@ public class CashIn {
     private User user;
     private Double amount;
 
-    public CashIn(Account account, CreditCard creditCard, User user, Double amount) {
-        this.account = account;
+    public CashIn(Psp psp, CreditCard creditCard, User user, Double amount) {
+        this.psp = psp;
         this.creditCard = creditCard;
         this.user = user;
         this.amount=amount;
@@ -38,12 +38,12 @@ public class CashIn {
         this.id = id;
     }
 
-    public Account getAccount() {
-        return account;
+    public Psp getAccount() {
+        return psp;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccount(Psp psp) {
+        this.psp = psp;
     }
 
     public CreditCard getCreditCard() {

@@ -1,7 +1,7 @@
 package edu.palermo.transactionalapi.services;
 
 import edu.palermo.transactionalapi.models.*;
-import edu.palermo.transactionalapi.repositories.AccountRepository;
+import edu.palermo.transactionalapi.repositories.PspRepository;
 import edu.palermo.transactionalapi.repositories.CommerceRepository;
 import edu.palermo.transactionalapi.repositories.CreditCardRepository;
 import edu.palermo.transactionalapi.repositories.UserRepository;
@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class CreationService {
@@ -21,7 +23,7 @@ public class CreationService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private AccountRepository accountRepository;
+    private PspRepository pspRepository;
     @Autowired
     private AccountService accountService;
     @Autowired
@@ -34,25 +36,54 @@ public class CreationService {
     private static final String  FIRST_VERIFY_CODE="8";
     private static final String  RESERVED_CODE="0";
     private static final String  SECOND_VERIFY_CODE="8";
+    private static final String USER_ALIAS_LENGTH="^\\w{6,20}$";
+    private static final String USER_ALIAS_CHARACTERS="([A-Za-z0-9\\-\\.]+)";
 
 
     public User createUser(HttpServletRequest request, User user) throws IllegalArgumentException{
         String myUser = jwtAuthorizationFilter.getUser(request);
-        Account account=accountRepository.findByUsername(myUser);
-        User savedUser=userRepository.save(user);
-        String cvu= generateCVU(account.getPspCode(), savedUser.getId());
-        savedUser.setCvu(cvu);
-        return userRepository.save(user);
+        Psp psp = pspRepository.findByUsername(myUser);
+        if(!userAlreadyExistsForPsp(user, psp)){
+            String cvu= generateCVU(psp.getPspCode(), user.getUserPspId());
+            user.setCvu(new Cvu(cvu,psp));
+            return userRepository.save(user);
+        }else {
+            throw new BusinessException("Psp client already exists");
+        }
     }
 
-    private String generateCVU(String pspCode, Long userID){
+    /*public User editAlias(User user) {
+        User myUser = userRepository.findByDni(user.getDni());
+        Pattern lengthPattern = Pattern.compile(USER_ALIAS_LENGTH);
+        Pattern charactersPattern = Pattern.compile(USER_ALIAS_CHARACTERS);
+        Matcher lengthMatcher = lengthPattern.matcher(user.getCvu().getAlias());
+        Matcher charactersMatcher = charactersPattern.matcher(user.getCvu().getAlias());
+        if (lengthMatcher.matches()) {
+            if(charactersMatcher.matches()){
+                Optional<User>aliasExists= Optional.ofNullable(userRepository.findByAlias(user.getAlias()));
+                if(aliasExists.isPresent() && !aliasExists.get().getDni().equals(user.getDni())){
+                    throw new BusinessException("Alias is already in use");
+                }else{
+                    myUser.setAlias(user.getAlias());
+                    myUser = userRepository.save(myUser);
+                }
+            }else{
+                throw new BusinessException("Alias contains invalid characters");
+            }
+        } else {
+            throw new BusinessException("Alias must be 6 to 20 characters long");
+        }
+        return myUser;
+    }*/
+
+    private String generateCVU(String pspCode, String userID){
         //cambiar a que tire numeros random para identificar
         String myUserId=String.format("%0"+CLIENT_CODE_LENGTH+"d", userID);
         return VIRTUAL_CODE+pspCode+FIRST_VERIFY_CODE+RESERVED_CODE+myUserId+SECOND_VERIFY_CODE;
     }
 
-    public Boolean userAlreadyExists(User user){
-        Optional<User> myUser=Optional.ofNullable(userRepository.findByDni(user.getDni()));
+    public Boolean userAlreadyExistsForPsp(User user, Psp psp){
+        Optional<User> myUser=Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(user.getUserPspId(),psp.getId()));
         if(myUser.isPresent()){
             return true;
         }else{
@@ -87,39 +118,41 @@ public class CreationService {
     }
 
     @Transactional
-    public Account createAccount(Account account)throws IllegalArgumentException{
-        String myHash=accountService.getHash(account.getPassword());
-        account.setPassword(myHash);
-        generatePspCode(account);
-        if(account.getAmount()==null){
-            account.setAmount(0.0);
-        }else{
-            if(account.getAmount()<0){
-                throw new BusinessException("Business amount must be equal or greater than cero");
-            }
-        }
-        return accountRepository.save(account);
+    public Psp createPsp(Psp psp)throws IllegalArgumentException{
+        pspAlreadyExists(psp);
+        String myHash=accountService.getHash(psp.getPassword());
+        psp.setPassword(myHash);
+        generatePspCode(psp);
+        psp.setTipoPSP(1);
+        return pspRepository.save(psp);
     }
 
-    private void generatePspCode(Account account) {
-        Account lastAccount=accountRepository.findTopByOrderByIdDesc();
+    private void generatePspCode(Psp psp) {
+        Psp lastPsp = pspRepository.findTopByOrderByIdDesc();
         String newPsp;
-        if(lastAccount==null || lastAccount.getPspCode()==null){
+        if(lastPsp ==null || lastPsp.getPspCode()==null){
             newPsp=INITIAL_PSP;
         }else{
-            long code=Long.valueOf(lastAccount.getPspCode());
+            long code=Long.valueOf(lastPsp.getPspCode());
             code++;
             newPsp=String.format("%0"+PSP_CODE_LENGTH+"d", code);
         }
-        account.setPspCode(newPsp);
+        psp.setPspCode(newPsp);
     }
 
-    public Boolean accountAlreadyExists(Account account){
-        Optional<Account> myAccount=Optional.ofNullable(accountRepository.findByUsername(account.getUsername()));
+    public Boolean pspAlreadyExists(Psp psp){
+        Optional<Psp> myAccount=Optional.ofNullable(pspRepository.findByCuit(psp.getCuit()));
         if(myAccount.isPresent()){
-            return true;
-        }else{
-            return false;
+            throw new BusinessException("There is already a registered PSP for the given CUIT");
         }
+        myAccount=Optional.ofNullable(pspRepository.findByUsername(psp.getUsername()));
+        if(myAccount.isPresent()){
+            throw new BusinessException("There is already a registered PSP for the given Username");
+        }
+        myAccount=Optional.ofNullable(pspRepository.findByAccountCbu(psp.getCbu()));
+        if(myAccount.isPresent()){
+            throw new BusinessException("There is already a registered PSP for the given CBU");
+        }
+        return false;
     }
 }
