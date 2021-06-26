@@ -33,6 +33,10 @@ public class Transfer {
         this.amount = amount;
     }
 
+    public Transfer(){
+
+    }
+
     public User getUserOrigin() {
         return userOrigin;
     }

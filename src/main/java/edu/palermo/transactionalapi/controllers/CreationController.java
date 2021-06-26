@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class CreationController {
             Response response = new Response();
             response.putItem("statusCode", 201);
             response.putItem("message", "User created succesfully");
-            response.putItem("cvu", myUser.getCvu());
+            response.putItem("cvu", myUser.getCvu().getCvu());
             return new ResponseEntity(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             Response response=new Response();
@@ -34,27 +35,20 @@ public class CreationController {
         }catch(BusinessException e){
             Response response=new Response();
             response.putItem("statusCode", 409);
-            response.putItem("message", "User already exists");
+            response.putItem("message", e.getMessage());
             return new ResponseEntity(response, HttpStatus.CONFLICT);
         }
     }
 
-    /*@PutMapping("/user/alias")
-    public ResponseEntity<Response> editAlias(@RequestBody User user) {
+    @PutMapping("/user/alias")
+    public ResponseEntity<Response> editAlias(HttpServletRequest request, @RequestBody User user) {
         try{
-            if(creationService.userAlreadyExists(user)){
-                User myUser=creationService.editAlias(user);
-                Response response=new Response();
-                response.putItem("statusCode", 201);
-                response.putItem("message", "User alias modified succesfully");
-                response.putItem("cvu", myUser.getCvu());
-                return new ResponseEntity(response, HttpStatus.OK);
-            }else{
-                Response response=new Response();
-                response.putItem("statusCode", 409);
-                response.putItem("message", "User does not exist");
-                return new ResponseEntity(response, HttpStatus.CONFLICT);
-            }
+            User myUser = creationService.editAlias(request, user);
+            Response response = new Response();
+            response.putItem("statusCode", 201);
+            response.putItem("message", "User alias modified succesfully");
+            response.putItem("cvu", myUser.getCvu().getAlias());
+            return new ResponseEntity(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             Response response=new Response();
             response.putItem("statusCode", 500);
@@ -66,7 +60,7 @@ public class CreationController {
             response.putItem("message", e.getMessage());
             return new ResponseEntity(response, HttpStatus.NOT_ACCEPTABLE);
         }
-    }*/
+    }
 
     @PostMapping("/creditcard/create")
     public ResponseEntity createCreditCard(@RequestBody CreditCard creditCard) {
@@ -114,13 +108,13 @@ public class CreationController {
         }
     }
 
-    @PostMapping("/account/create")
+    @PostMapping("/psp/create")
     public ResponseEntity createPsp(@RequestBody Psp psp) {
         try{
             Psp myPsp = creationService.createPsp(psp);
             Response response = new Response();
             response.putItem("statusCode", 201);
-            response.putItem("message", "Account created succesfully");
+            response.putItem("message", "Psp created succesfully");
             response.putItem("pspCode", myPsp.getPspCode());
             response.putItem("cuit", myPsp.getCuit());
             response.putItem("razonSocial", myPsp.getRazonSocial());
@@ -139,5 +133,26 @@ public class CreationController {
         }
     }
 
+    @PostMapping("/account/create")
+    public ResponseEntity createAccount(@RequestBody Account account) {
+        try{
+            Account account1 = creationService.createAccount(account);
+            Response response = new Response();
+            response.putItem("statusCode", 201);
+            response.putItem("message", "Account created succesfully");
+            response.putItem("cbu", account1.getCbu());
+            return new ResponseEntity(response, HttpStatus.OK);
+        }catch(IllegalArgumentException e){
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (BusinessException e){
+            Response response=new Response();
+            response.putItem("statusCode", 406);
+            response.putItem("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
 
 }

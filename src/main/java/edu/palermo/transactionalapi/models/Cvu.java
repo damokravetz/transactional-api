@@ -18,6 +18,10 @@ public class Cvu {
     private String alias;
     private int moneda;
 
+    public Cvu(){
+
+    }
+
     public Cvu(String cvu, Psp psp) {
         this.cvu = cvu;
         this.psp = psp;
@@ -62,9 +66,5 @@ public class Cvu {
 
     public void setMoneda(int moneda) {
         this.moneda = moneda;
-    }
-
-    public String getPspCode(){
-        return cvu.substring(3,7);
     }
 }

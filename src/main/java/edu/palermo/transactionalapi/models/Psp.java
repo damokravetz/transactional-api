@@ -21,9 +21,11 @@ public class Psp {
     @Column(length = 4)
     private String pspCode;
     private Integer tipoPSP;
-    @OneToOne
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "accountId", referencedColumnName = "id")
     private Account account;
+
     @Transient
     private String token;
     @Transient
@@ -123,13 +125,11 @@ public class Psp {
 
     public Boolean isCbuValid(){
         Boolean res=false;
-        try{
-            Long value= Long.valueOf(this.cbu);
-            if(this.cbu.length()==22){
-                res=true;
-            }
-        }catch (NumberFormatException ex){
-            res=false;
+        String regex="^[0-9]+$";
+        Pattern p = Pattern.compile(regex);
+        Matcher m = p.matcher(this.cbu);
+        if(this.cbu.length() == 22 && m.matches()) {
+            res=true;
         }
         return res;
     }

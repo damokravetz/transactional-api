@@ -16,9 +16,12 @@ public class User {
     private String name;
     private String dni;
     private String userPspId;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "cvuId", referencedColumnName = "id")
     private Cvu cvu;
+
+    @Transient
+    String alias;
 
     public User() {
     }
@@ -67,6 +70,14 @@ public class User {
 
     public void setUserPspId(String userPspId) {
         this.userPspId = userPspId;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public Boolean isUserPspIdValid(){

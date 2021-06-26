@@ -65,8 +65,8 @@ public class TransactionService {
         Optional<User> userOrigin = Optional.ofNullable(userRepository.findByCvuCvuAndCvuPspId(cvuOrigin,psp.getId()));
         Optional<User> userDestination = Optional.ofNullable(userRepository.findByCvuCvu(cvuDestination));
         if (userOrigin.isPresent() && userDestination.isPresent()) {
-            String pspCodeOrigin=userOrigin.get().getCvu().getPspCode();
-            String pspCodeDestination=userDestination.get().getCvu().getPspCode();
+            String pspCodeOrigin=userOrigin.get().getCvu().getPsp().getPspCode();
+            String pspCodeDestination=userDestination.get().getCvu().getPsp().getPspCode();
             //or get by alias
             Psp origin= pspRepository.findByPspCode(pspCodeOrigin);
             Psp destination= pspRepository.findByPspCode(pspCodeDestination);
@@ -74,8 +74,10 @@ public class TransactionService {
             transfer=transferRepository.save(transfer);
             if(origin.getId()!=destination.getId()){
                 //substraer y sumar a las cuentas
-                origin.getAccount().setAmount(origin.getAccount().getAmount()-amount);
-                destination.getAccount().setAmount(destination.getAccount().getAmount()+amount);
+                Double originAmount=origin.getAccount().getAmount()-amount;
+                Double destinationAmount=destination.getAccount().getAmount()+amount;
+                origin.getAccount().setAmount(originAmount);
+                destination.getAccount().setAmount(destinationAmount);
                 pspRepository.save(origin);
                 pspRepository.save(destination);
             }
@@ -85,20 +87,20 @@ public class TransactionService {
         return transfer;
     }
 
-    /*@Transactional
-    public CashIn cashIn(CashIn cashIn) {
-        CashIn myCashIn;
-        Optional<User> myUser = Optional.ofNullable(userRepository.findByDni(cashIn.getUser().getDni()));
+    @Transactional
+    public CashIn cashIn(HttpServletRequest request, CashIn cashIn) {
+        String currentUser = jwtAuthorizationFilter.getUser(request);
+        Psp psp = pspRepository.findByUsername(currentUser);
+
+        Optional<User> myUser = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(cashIn.getUser().getUserPspId(),psp.getId()));
         Optional<CreditCard> myCreditCard = Optional.ofNullable(creditCardRepository.findByNumberAndExpirationDateAndVerificationCode
                 (cashIn.getCreditCard().getNumber(), cashIn.getCreditCard().getExpirationDate(), cashIn.getCreditCard().getVerificationCode()));
 
         if (myUser.isPresent() && myCreditCard.isPresent() && cashIn.getAmount()>0) {
             if (validateCreditCard(myCreditCard.get())) {
-                String pspCode=myUser.get().getCvu().getPspCode();
-                Psp psp = pspRepository.findByPspCode(pspCode);
                 cashIn= new CashIn(psp, myCreditCard.get(), myUser.get(), cashIn.getAmount());
                 cashIn=cashInRepository.save(cashIn);
-                psp.setAmount(psp.getAmount()+cashIn.getAmount());
+                psp.getAccount().setAmount(psp.getAccount().getAmount()+cashIn.getAmount());
                 pspRepository.save(psp);
             } else {
                 throw new BusinessException("Credit card expired");
@@ -107,7 +109,7 @@ public class TransactionService {
             throw new BusinessException("Invalid transaction");
         }
         return cashIn;
-    }*/
+    }
 
 
     private Boolean validateCreditCard(CreditCard creditCard){

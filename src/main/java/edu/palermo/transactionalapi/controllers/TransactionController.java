@@ -59,10 +59,10 @@ public class TransactionController {
         }
     }
 
-    /*@PostMapping("/cashin")
-    public ResponseEntity cashIn(@RequestBody CashIn cashIn) {
+    @PostMapping("/cashin")
+    public ResponseEntity cashIn(HttpServletRequest request, @RequestBody CashIn cashIn) {
         try{
-            CashIn myCashIn=transactionService.cashIn(cashIn);
+            CashIn myCashIn=transactionService.cashIn(request,cashIn);
             Response response=new Response();
             response.putItem("statusCode", 200);
             response.putItem("message", "Succesful transfer");
@@ -78,6 +78,6 @@ public class TransactionController {
             response.putItem("message", "Something went wrong");
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }*/
+    }
 
 }

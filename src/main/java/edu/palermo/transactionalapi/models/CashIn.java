@@ -30,6 +30,10 @@ public class CashIn {
         this.amount=amount;
     }
 
+    public CashIn(){
+
+    }
+
     public Long getId() {
         return id;
     }
