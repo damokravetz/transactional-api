@@ -92,11 +92,17 @@ public class CreationService {
     private String generateCVU(String pspCode, String userID){
         //cambiar a que tire numeros random para identificar
         String myUserId;
-        if(userID.length()<CLIENT_CODE_LENGTH){
-            myUserId=String.format("%0"+CLIENT_CODE_LENGTH+"d", userID);
-        }else{
-            myUserId=userID;
+        try{
+            Integer iseridnum=Integer.valueOf(userID);
+            if(userID.length()<CLIENT_CODE_LENGTH){
+                myUserId=String.format("%0"+CLIENT_CODE_LENGTH+"d", iseridnum);
+            }else{
+                myUserId=userID;
+            }
+        }catch(NumberFormatException e){
+            throw new BusinessException("UserPspId Invalido");
         }
+
         return VIRTUAL_CODE+pspCode+FIRST_VERIFY_CODE+RESERVED_CODE+myUserId+SECOND_VERIFY_CODE;
     }
 
