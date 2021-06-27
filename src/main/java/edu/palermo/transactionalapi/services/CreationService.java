@@ -93,7 +93,7 @@ public class CreationService {
         //cambiar a que tire numeros random para identificar
         String myUserId;
         try{
-            Integer iseridnum=Integer.valueOf(userID);
+            Long iseridnum=Long.valueOf(userID);
             if(userID.length()<CLIENT_CODE_LENGTH){
                 myUserId=String.format("%0"+CLIENT_CODE_LENGTH+"d", iseridnum);
             }else{
