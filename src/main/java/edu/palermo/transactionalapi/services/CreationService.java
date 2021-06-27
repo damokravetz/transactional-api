@@ -37,7 +37,8 @@ public class CreationService {
     private static final String  FIRST_VERIFY_CODE="8";
     private static final String  RESERVED_CODE="0";
     private static final String  SECOND_VERIFY_CODE="8";
-    private static final String USER_ALIAS_LENGTH="^\\w{6,20}$";
+    private static final int USER_ALIAS_MIN_LENGTH=6;
+    private static final int USER_ALIAS_MAX_LENGTH=20;
     private static final String USER_ALIAS_CHARACTERS="([A-Za-z0-9\\-\\.]+)";
 
 
@@ -64,10 +65,9 @@ public class CreationService {
         Psp psp = pspRepository.findByUsername(currentUser);
         Optional<User> myUser = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(user.getUserPspId(), psp.getId()));
         if(myUser.isPresent()){
-            Pattern lengthPattern = Pattern.compile(USER_ALIAS_LENGTH);
             Pattern charactersPattern = Pattern.compile(USER_ALIAS_CHARACTERS);
-            Matcher lengthMatcher = lengthPattern.matcher(user.getAlias());
             Matcher charactersMatcher = charactersPattern.matcher(user.getAlias());
+            if(user.getAlias().length()>=USER_ALIAS_MIN_LENGTH&& user.getAlias().length()<=USER_ALIAS_MAX_LENGTH){
                 if(charactersMatcher.matches()){
                     Optional<User>aliasExists= Optional.ofNullable(userRepository.findByCvuAlias(user.getAlias()));
                     if(aliasExists.isPresent() && !aliasExists.get().getDni().equals(user.getDni())){
@@ -79,6 +79,9 @@ public class CreationService {
                 }else{
                     throw new BusinessException("Alias contains invalid characters");
                 }
+            }else{
+                throw new BusinessException("Alias must be between 6 and 20 characters long");
+            }
         }else {
             throw new BusinessException("User not valid for Psp");
         }
