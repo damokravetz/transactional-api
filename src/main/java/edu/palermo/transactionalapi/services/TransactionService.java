@@ -58,11 +58,11 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transfer makeTransfer(HttpServletRequest request, String cvuOrigin, String cvuDestination, Double amount) {
+    public Transfer makeTransfer(HttpServletRequest request, String userPspIdOrigin, String cvuDestination, Double amount) {
         Transfer transfer;
         String myUser = jwtAuthorizationFilter.getUser(request);
         Psp psp = pspRepository.findByUsername(myUser);
-        Optional<User> userOrigin = Optional.ofNullable(userRepository.findByCvuCvuAndCvuPspId(cvuOrigin,psp.getId()));
+        Optional<User> userOrigin = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(userPspIdOrigin,psp.getId()));
         Optional<User> userDestination = Optional.ofNullable(userRepository.findByCvuCvu(cvuDestination));
         if (userOrigin.isPresent() && userDestination.isPresent()) {
             String pspCodeOrigin=userOrigin.get().getCvu().getPsp().getPspCode();
@@ -98,7 +98,7 @@ public class TransactionService {
 
         if (myUser.isPresent() && myCreditCard.isPresent() && cashIn.getAmount()>0) {
             if (validateCreditCard(myCreditCard.get())) {
-                cashIn= new CashIn(psp, myCreditCard.get(), myUser.get(), cashIn.getAmount());
+                cashIn= new CashIn(psp, myCreditCard.get(), myUser.get(), cashIn.getAmount(), cashIn.getIdTransaction(), cashIn.getDate());
                 cashIn=cashInRepository.save(cashIn);
                 psp.getAccount().setAmount(psp.getAccount().getAmount()+cashIn.getAmount());
                 pspRepository.save(psp);

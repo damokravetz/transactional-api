@@ -1,7 +1,7 @@
 package edu.palermo.transactionalapi.models;
 
 public class TransferRequest {
-    private String cvuOrigin;
+    private String userPspId;
     private String cvuDestination;
     //private String aliasDestination;
     private Double amount;
@@ -9,12 +9,12 @@ public class TransferRequest {
     public TransferRequest() {
     }
 
-    public String getCvuOrigin() {
-        return cvuOrigin;
+    public String getUserPspId() {
+        return userPspId;
     }
 
-    public void setCvuOrigin(String cvuOrigin) {
-        this.cvuOrigin = cvuOrigin;
+    public void setUserPspId(String userPspId) {
+        this.userPspId = userPspId;
     }
 
     public String getCvuDestination() {

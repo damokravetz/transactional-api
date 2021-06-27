@@ -42,7 +42,7 @@ public class TransactionController {
     @PostMapping("/transfer")
     public ResponseEntity excecuteTransfer(HttpServletRequest request, @RequestBody TransferRequest transferRequest) {
         try{
-            Transfer transfer=transactionService.makeTransfer(request,transferRequest.getCvuOrigin(), transferRequest.getCvuDestination(), transferRequest.getAmount());
+            Transfer transfer=transactionService.makeTransfer(request,transferRequest.getUserPspId(), transferRequest.getCvuDestination(), transferRequest.getAmount());
             Response response=new Response();
             response.putItem("statusCode", 200);
             response.putItem("message", "Succesful transfer");

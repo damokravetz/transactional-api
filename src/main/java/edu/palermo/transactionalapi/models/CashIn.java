@@ -22,12 +22,16 @@ public class CashIn {
     @JoinColumn(name = "userId", referencedColumnName = "id")
     private User user;
     private Double amount;
+    private String idTransaction;
+    private String date;
 
-    public CashIn(Psp psp, CreditCard creditCard, User user, Double amount) {
+    public CashIn(Psp psp, CreditCard creditCard, User user, Double amount, String idTransaction, String date) {
         this.psp = psp;
         this.creditCard = creditCard;
         this.user = user;
         this.amount=amount;
+        this.idTransaction=idTransaction;
+        this.date=date;
     }
 
     public CashIn(){
@@ -72,5 +76,29 @@ public class CashIn {
 
     public void setAmount(Double amount) {
         this.amount = amount;
+    }
+
+    public Psp getPsp() {
+        return psp;
+    }
+
+    public void setPsp(Psp psp) {
+        this.psp = psp;
+    }
+
+    public String getIdTransaction() {
+        return idTransaction;
+    }
+
+    public void setIdTransaction(String idTransaction) {
+        this.idTransaction = idTransaction;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }
