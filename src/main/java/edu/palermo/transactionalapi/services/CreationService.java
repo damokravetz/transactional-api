@@ -97,7 +97,11 @@ public class CreationService {
             if(userID.length()<CLIENT_CODE_LENGTH){
                 myUserId=String.format("%0"+CLIENT_CODE_LENGTH+"d", iseridnum);
             }else{
-                myUserId=userID;
+                if(userID.length()>CLIENT_CODE_LENGTH){
+                    throw new BusinessException("UserPspId Invalido");
+                }else {
+                    myUserId=userID;
+                }
             }
         }catch(NumberFormatException e){
             throw new BusinessException("UserPspId Invalido");
