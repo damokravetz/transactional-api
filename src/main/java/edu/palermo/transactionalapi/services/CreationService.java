@@ -68,7 +68,6 @@ public class CreationService {
             Pattern charactersPattern = Pattern.compile(USER_ALIAS_CHARACTERS);
             Matcher lengthMatcher = lengthPattern.matcher(user.getAlias());
             Matcher charactersMatcher = charactersPattern.matcher(user.getAlias());
-            if (lengthMatcher.matches()) {
                 if(charactersMatcher.matches()){
                     Optional<User>aliasExists= Optional.ofNullable(userRepository.findByCvuAlias(user.getAlias()));
                     if(aliasExists.isPresent() && !aliasExists.get().getDni().equals(user.getDni())){
@@ -80,9 +79,6 @@ public class CreationService {
                 }else{
                     throw new BusinessException("Alias contains invalid characters");
                 }
-            } else {
-                throw new BusinessException("Alias must be 6 to 20 characters long");
-            }
         }else {
             throw new BusinessException("User not valid for Psp");
         }
