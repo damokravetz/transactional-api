@@ -7,6 +7,7 @@ import java.util.List;
 
 public interface UserRepository extends CrudRepository<User, Long> {
     List<User> findAll();
+    List<User> findByCvuPspId(Long id);
     User findByUserPspIdAndCvuPspId(String userPspId, Long pspId);
     User findByCvuCvu(String cvu);
     User findByDni(String dni);

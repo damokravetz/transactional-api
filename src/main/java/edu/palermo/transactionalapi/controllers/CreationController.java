@@ -6,13 +6,12 @@ import edu.palermo.transactionalapi.services.CreationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
+@CrossOrigin
 @RestController
 public class CreationController {
     @Autowired
@@ -142,6 +141,24 @@ public class CreationController {
             response.putItem("message", "Account created succesfully");
             response.putItem("cbu", account1.getCbu());
             return new ResponseEntity(response, HttpStatus.OK);
+        }catch(IllegalArgumentException e){
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (BusinessException e){
+            Response response=new Response();
+            response.putItem("statusCode", 406);
+            response.putItem("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/users")
+    public ResponseEntity<User> getUsers(HttpServletRequest request) {
+        try{
+            List<UserDTO> users= creationService.getUsers(request);
+            return new ResponseEntity(users, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             Response response=new Response();
             response.putItem("statusCode", 500);

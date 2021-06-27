@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.concurrent.atomic.AtomicLong;
 
+@CrossOrigin
 @RestController
 public class TransactionController {
     @Autowired

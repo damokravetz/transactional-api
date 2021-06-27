@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -195,5 +197,21 @@ public class CreationService {
             throw new BusinessException("There is already a registered PSP for the given CBU");
         }
         return false;
+    }
+
+    public List<UserDTO> getUsers(HttpServletRequest request)throws IllegalArgumentException{
+        String currentUser = jwtAuthorizationFilter.getUser(request);
+        Psp psp = pspRepository.findByUsername(currentUser);
+        List<User>users=userRepository.findByCvuPspId(psp.getId());
+        List<UserDTO>usersResponse=new ArrayList<>();
+        for (User u:users) {
+            UserDTO userDTO=new UserDTO();
+            userDTO.setId(u.getId());
+            userDTO.setName(u.getName());
+            userDTO.setDni(u.getDni());
+            userDTO.setCvu(u.getCvu().getCvu());
+            usersResponse.add(userDTO);
+        }
+        return usersResponse;
     }
 }
