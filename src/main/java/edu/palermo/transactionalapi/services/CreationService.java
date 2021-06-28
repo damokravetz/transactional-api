@@ -219,8 +219,17 @@ public class CreationService {
             userDTO.setName(u.getName());
             userDTO.setDni(u.getDni());
             userDTO.setCvu(u.getCvu().getCvu());
+            userDTO.setUserPspId(u.getUserPspId());
+            //userDTO.setAlias(u.getCvu().getAlias());
+            userDTO.setAlias("Alias");
             usersResponse.add(userDTO);
         }
         return usersResponse;
+    }
+
+    public Account getAccount(HttpServletRequest request)throws IllegalArgumentException{
+        String currentUser = jwtAuthorizationFilter.getUser(request);
+        Psp psp = pspRepository.findByUsername(currentUser);
+        return psp.getAccount();
     }
 }

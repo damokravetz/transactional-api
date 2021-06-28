@@ -155,10 +155,32 @@ public class CreationController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<User> getUsers(HttpServletRequest request) {
+    public ResponseEntity<UserDTO> getUsers(HttpServletRequest request) {
         try{
             List<UserDTO> users= creationService.getUsers(request);
             return new ResponseEntity(users, HttpStatus.OK);
+        }catch(IllegalArgumentException e){
+            Response response=new Response();
+            response.putItem("statusCode", 500);
+            response.putItem("message", "Something went wrong");
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }catch (BusinessException e){
+            Response response=new Response();
+            response.putItem("statusCode", 406);
+            response.putItem("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.NOT_ACCEPTABLE);
+        }
+    }
+
+    @GetMapping("/accountamount")
+    public ResponseEntity getAccountAmount(HttpServletRequest request) {
+        try{
+            Account account= creationService.getAccount(request);
+            Response response = new Response();
+            response.putItem("statusCode", 200);
+            response.putItem("message", "Account amount");
+            response.putItem("amount", account.getAmount());
+            return new ResponseEntity(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             Response response=new Response();
             response.putItem("statusCode", 500);

@@ -57,7 +57,7 @@ public class TransactionalApiApplication {
 			http.cors().and().csrf().disable()
 					.addFilterAfter(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
 					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/auth", "/creditcard/create", "/commerce/create", "/account/create", "/psp/create").permitAll()
+					.antMatchers( "/auth", "/creditcard/create", "/commerce/create", "/account/create", "/psp/create").permitAll()
 					.anyRequest().authenticated();
 		}
 	}

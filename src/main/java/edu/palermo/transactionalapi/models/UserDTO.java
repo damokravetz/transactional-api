@@ -5,6 +5,16 @@ public class UserDTO {
     private String name;
     private String dni;
     private String cvu;
+    private String userPspId;
+    private String alias;
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
 
     public Long getId() {
         return id;
@@ -36,5 +46,13 @@ public class UserDTO {
 
     public void setCvu(String cvu) {
         this.cvu = cvu;
+    }
+
+    public String getUserPspId() {
+        return userPspId;
+    }
+
+    public void setUserPspId(String userPspId) {
+        this.userPspId = userPspId;
     }
 }

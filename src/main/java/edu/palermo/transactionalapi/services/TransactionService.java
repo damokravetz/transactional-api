@@ -62,25 +62,29 @@ public class TransactionService {
         Transfer transfer;
         String myUser = jwtAuthorizationFilter.getUser(request);
         Psp psp = pspRepository.findByUsername(myUser);
-        Optional<User> userOrigin = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(userPspIdOrigin,psp.getId()));
+        Optional<User> userOrigin = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(userPspIdOrigin, psp.getId()));
         Optional<User> userDestination = Optional.ofNullable(userRepository.findByCvuCvu(cvuDestination));
         if (userOrigin.isPresent() && userDestination.isPresent()) {
-            String pspCodeOrigin=userOrigin.get().getCvu().getPsp().getPspCode();
-            String pspCodeDestination=userDestination.get().getCvu().getPsp().getPspCode();
+            String pspCodeOrigin = userOrigin.get().getCvu().getPsp().getPspCode();
+            String pspCodeDestination = userDestination.get().getCvu().getPsp().getPspCode();
             //or get by alias
-            Psp origin= pspRepository.findByPspCode(pspCodeOrigin);
-            Psp destination= pspRepository.findByPspCode(pspCodeDestination);
-            transfer= new Transfer(origin, destination, userOrigin.get(), userDestination.get(), amount);
-            transfer=transferRepository.save(transfer);
-            if(origin.getId()!=destination.getId()){
-                //substraer y sumar a las cuentas
-                Double originAmount=origin.getAccount().getAmount()-amount;
-                Double destinationAmount=destination.getAccount().getAmount()+amount;
-                origin.getAccount().setAmount(originAmount);
-                destination.getAccount().setAmount(destinationAmount);
-                pspRepository.save(origin);
-                pspRepository.save(destination);
+            Psp origin = pspRepository.findByPspCode(pspCodeOrigin);
+            Psp destination = pspRepository.findByPspCode(pspCodeDestination);
+            transfer = new Transfer(origin, destination, userOrigin.get(), userDestination.get(), amount);
+            Double originAmount = origin.getAccount().getAmount() - amount;
+            Double destinationAmount = destination.getAccount().getAmount() + amount;
+            if (originAmount >= 0) {
+                if (origin.getId() != destination.getId()) {
+                    //substraer y sumar a las cuentas
+                    origin.getAccount().setAmount(originAmount);
+                    destination.getAccount().setAmount(destinationAmount);
+                    pspRepository.save(origin);
+                    pspRepository.save(destination);
+                }
+            } else {
+                throw new BusinessException("Amount not available in account");
             }
+            transfer = transferRepository.save(transfer);
         } else {
             throw new BusinessException("Invalid transfer");
         }

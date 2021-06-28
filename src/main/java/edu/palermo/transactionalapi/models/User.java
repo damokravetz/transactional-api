@@ -84,7 +84,7 @@ public class User {
         Boolean res=false;
         try{
             Long value= Long.valueOf(this.userPspId);
-            if(this.userPspId.length()<=12){
+            if(this.userPspId.length()==12){
                 res=true;
             }
         }catch (NumberFormatException ex){
