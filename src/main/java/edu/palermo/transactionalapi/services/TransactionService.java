@@ -58,12 +58,15 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transfer makeTransfer(HttpServletRequest request, String userPspIdOrigin, String cvuDestination, Double amount) {
+    public Transfer makeTransfer(HttpServletRequest request, String userPspIdOrigin, String cvuAliasDestination, Double amount) {
         Transfer transfer;
         String myUser = jwtAuthorizationFilter.getUser(request);
         Psp psp = pspRepository.findByUsername(myUser);
         Optional<User> userOrigin = Optional.ofNullable(userRepository.findByUserPspIdAndCvuPspId(userPspIdOrigin, psp.getId()));
-        Optional<User> userDestination = Optional.ofNullable(userRepository.findByCvuCvu(cvuDestination));
+        Optional<User> userDestination = Optional.ofNullable(userRepository.findByCvuCvu(cvuAliasDestination));
+        if(!userDestination.isPresent()){
+            userDestination=Optional.ofNullable(userRepository.findByCvuAlias(cvuAliasDestination));
+        }
         if (userOrigin.isPresent() && userDestination.isPresent()) {
             String pspCodeOrigin = userOrigin.get().getCvu().getPsp().getPspCode();
             String pspCodeDestination = userDestination.get().getCvu().getPsp().getPspCode();
