@@ -7,9 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +38,10 @@ public class CreationService {
     private static final int USER_ALIAS_MIN_LENGTH=6;
     private static final int USER_ALIAS_MAX_LENGTH=20;
     private static final String USER_ALIAS_CHARACTERS="([A-Za-z0-9\\-\\.]+)";
+    private static final List<AliasWords> VALUES =
+            Collections.unmodifiableList(Arrays.asList(AliasWords.values()));
+    private static final int SIZE = VALUES.size();
+    private static final Random RANDOM = new Random();
 
 
     public User createUser(HttpServletRequest request, User user) throws IllegalArgumentException{
@@ -53,11 +55,20 @@ public class CreationService {
         }
         if(!userAlreadyExistsForPsp(user, psp)){
             String cvu= generateCVU(psp.getPspCode(), user.getUserPspId());
-            user.setCvu(new Cvu(cvu,psp));
+            String alias= generateAlias();
+            user.setCvu(new Cvu(cvu,psp,alias));
             return userRepository.save(user);
         }else {
             throw new BusinessException("Psp client already exists");
         }
+    }
+
+    private String generateAlias(){
+        String alias=VALUES.get(RANDOM.nextInt(SIZE)).toString();
+        for(int i=0;i<2;i++){
+            alias= alias+"."+VALUES.get(RANDOM.nextInt(SIZE)).toString();
+        }
+        return alias;
     }
 
     public User editAlias(HttpServletRequest request, User user) {
@@ -220,8 +231,7 @@ public class CreationService {
             userDTO.setDni(u.getDni());
             userDTO.setCvu(u.getCvu().getCvu());
             userDTO.setUserPspId(u.getUserPspId());
-            //userDTO.setAlias(u.getCvu().getAlias());
-            userDTO.setAlias("Alias");
+            userDTO.setAlias(u.getCvu().getAlias());
             usersResponse.add(userDTO);
         }
         return usersResponse;

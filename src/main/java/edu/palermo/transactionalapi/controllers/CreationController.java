@@ -25,6 +25,7 @@ public class CreationController {
             response.putItem("statusCode", 201);
             response.putItem("message", "User created succesfully");
             response.putItem("cvu", myUser.getCvu().getCvu());
+            response.putItem("alias", myUser.getCvu().getAlias());
             return new ResponseEntity(response, HttpStatus.OK);
         }catch(IllegalArgumentException e){
             Response response=new Response();

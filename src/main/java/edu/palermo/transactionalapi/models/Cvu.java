@@ -22,10 +22,11 @@ public class Cvu {
 
     }
 
-    public Cvu(String cvu, Psp psp) {
+    public Cvu(String cvu, Psp psp, String alias) {
         this.cvu = cvu;
         this.psp = psp;
         this.moneda=032;
+        this.alias=alias;
     }
 
     public Long getId() {
